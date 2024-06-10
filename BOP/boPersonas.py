@@ -18,6 +18,7 @@ TbConn=TableConnector()
 TbFact=TableFactory()
 
 # TB  Structure
+#    prueba de comentario
 #    def execute_query(self, query, params=None):
 #    def fetch_data(self, query, params=None):
 #    def insert_record(self, table, data):
