@@ -1,0 +1,8 @@
+info postgresql
+
+#Admin#99
+
+
+puerto 5435 (por default decía 5432)
+
+Hi 

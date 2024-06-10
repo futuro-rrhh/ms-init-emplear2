@@ -1,0 +1,46 @@
+
+# No MODIFICAR DATOS!!! 
+# Usar formato  Clave=valor
+# sería ideal utilizar un separador final para poner comentarios
+
+# Debug 
+Debug=1
+Level=1
+ErrorLog=basicos/ErrorLog.txt
+
+
+# Business Objects  
+BoGeneral=Postgres
+
+# Base de Datos 
+General=MongoDB
+ConnPostgres=postgres_config.txt
+host=89.116.139.251
+port=27017
+database=admin
+user=
+password=
+
+# Base de Datos Errores
+ErroresDB=database
+ErroresDBTipo=Txt
+ErroresDBAdv=dbErrores
+ErroresDBAdvTipo=Postgres
+
+# Base de datos Txt
+UbicBD=database
+
+# Base de Datos Postgres
+UbicPostgres1=postgres_config.txt
+
+
+# Base de Datos Perfiles 
+PerfilesDB=Mongo
+PerfilesDBTipo=Txt
+PerfilesDBAdv=dbErrores
+PerfilesDBAdvTipo=Postgres
+
+# Sec
+sk1=fb0dc97e2a2785ccf749400580a0cc1c52411aa2c439552d0fd489debea19c84
+sk2=
+sk3=

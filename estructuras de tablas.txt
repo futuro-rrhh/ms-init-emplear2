@@ -1,0 +1,153 @@
+--------------------------------------------------------------------------------------------
+--  Estructuras de tablas
+--------------------------------------------------------------------------------------------
+
+-- Table: public.tbPaises
+
+-- DROP TABLE IF EXISTS public."tbPaises";
+
+CREATE TABLE IF NOT EXISTS public."tbPaises"
+(
+    "idPais" smallint NOT NULL,
+    "dsPais" character(20) COLLATE pg_catalog."default",
+    "dsMoneda" character(20) COLLATE pg_catalog."default",
+    "idMoneda" smallint,
+    "CodMoneda" character(3) COLLATE pg_catalog."default",
+    CONSTRAINT "tbPaises_pkey" PRIMARY KEY ("idPais")
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."tbPaises"
+    OWNER to postgres;
+
+-- ID Paises: ISO 3166 // Id Monedas ISO 4217 https://es.wikipedia.org/wiki/ISO_4217
+-- delete from tbPaises; 
+insert into public."tbPaises" values (826, 'Reino Unido', 'Libra Esterlina', 826, 'GBP');
+insert into public."tbPaises" values (840, 'Estados Unidos', 'Dólar Estadounidense', 840 , 'USD');
+insert into public."tbPaises" values (032, 'Argentina', 'Peso Argentino', 032, 'ARS');
+insert into public."tbPaises" values (862, 'Venezuela', 'Bolívar', 926, 'VED');
+insert into public."tbPaises" values (858, 'Uruguay', 'Peso Uruguayo', 858, 'UYU');
+
+insert into public."tbPaises" values (600, 'Paraguay', 'Guaraní', 600, 'PYG');
+insert into public."tbPaises" values (68, 'Bolivia', 'Boliviano', 068 , 'BOB');
+insert into public."tbPaises" values (152, 'Chile', 'Peso Chileno', 152 , 'CLP');
+insert into public."tbPaises" values (604, 'Peru', 'Sol', 604, 'PEN');
+insert into public."tbPaises" values (218, 'Ecuador', 'Dólar Estadounidense', 840, 'USD');
+
+insert into public."tbPaises" values (076, 'Brasil', 'Real Brasileño', 076, 'BRL');
+insert into public."tbPaises" values (170, 'Colombia', 'Peso Colombiano', 170, 'COP');
+insert into public."tbPaises" values (156, 'China', 'Yuan Chino', 156, 'CNY');
+insert into public."tbPaises" values (724, 'España', 'EURO', 840, 'EUR');
+insert into public."tbPaises" values (380, 'Italia', 'EURO', 840, 'EUR');
+
+
+-- Table: public.tbDocumentosId
+
+-- DROP TABLE IF EXISTS public."tbDocumentosId";
+
+CREATE TABLE IF NOT EXISTS public."tbDocumentosId"
+(
+    "idDocIden" smallint NOT NULL,
+    "dsDocIden" character(35) COLLATE pg_catalog."default",
+    "dsDocIdenRed" character(5) COLLATE pg_catalog."default",
+    "idPais" smallint,
+    CONSTRAINT "tbDocumentosId_pkey" PRIMARY KEY ("idDocIden"),
+    CONSTRAINT "fkPais_DocId" FOREIGN KEY ("idPais")
+        REFERENCES public."tbPaises" ("idPais") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."tbDocumentosId"
+    OWNER to postgres;
+-- Index: fki_fkPais_DocId
+
+-- DROP INDEX IF EXISTS public."fki_fkPais_DocId";
+
+CREATE INDEX IF NOT EXISTS "fki_fkPais_DocId"
+    ON public."tbDocumentosId" USING btree
+    ("idPais" ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+insert into public."tbDocumentosId" values (1, 'Documento Nacional de Identidad', 'DNI', 032);
+insert into public."tbDocumentosId" values (2, 'Clave Fiscal Laboral', 'CUIL', 32);
+insert into public."tbDocumentosId" values (3, 'Clave Fiscal Empresa', 'CUIT', 32);
+
+---------------------------------------------------------------
+
+-- Table: public.tbPersonas
+
+-- DROP TABLE IF EXISTS public."tbPersonas";
+
+CREATE TABLE IF NOT EXISTS public."tbPersonas"
+(
+    idpersona integer NOT NULL,
+    dspersona character(40) COLLATE pg_catalog."default" NOT NULL,
+    ctipopersona character(1) COLLATE pg_catalog."default" NOT NULL,
+    email character(40) COLLATE pg_catalog."default" NOT NULL,
+    dfecvalidmail timestamp with time zone,
+    cnombrepers character(40) COLLATE pg_catalog."default",
+    capellidopers character(40) COLLATE pg_catalog."default",
+    cpassword character(256) COLLATE pg_catalog."default" NOT NULL,
+    ctycversion character(10) COLLATE pg_catalog."default",
+    dfecaltpers timestamp with time zone NOT NULL,
+    dfecmodpers timestamp with time zone,
+    bbuscatalento character(1) COLLATE pg_catalog."default",
+    bbuscatrabajo character(1) COLLATE pg_catalog."default",
+    idpaisalta smallint NOT NULL,
+    idpaisnac smallint,
+    idpaisdoc smallint,
+    iddociden smallint,
+    nrodociden character varying(15) COLLATE pg_catalog."default",
+    fnacpersona timestamp with time zone,
+    "idPersona" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    CONSTRAINT "tPersonas_pkey" PRIMARY KEY (idpersona),
+    CONSTRAINT "fkPersonas_Pais_Alta" FOREIGN KEY (idpaisalta)
+        REFERENCES public."tbPaises" ("idPais") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "fkPersonas_Pais_Doc" FOREIGN KEY (idpaisdoc)
+        REFERENCES public."tbPaises" ("idPais") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "fkPersonas_Pais_Nac" FOREIGN KEY (idpaisnac)
+        REFERENCES public."tbPaises" ("idPais") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public."tbPersonas"
+    OWNER to postgres;
+-- Index: fki_fkPersonas_Pais_Alta
+
+-- DROP INDEX IF EXISTS public."fki_fkPersonas_Pais_Alta";
+
+CREATE INDEX IF NOT EXISTS "fki_fkPersonas_Pais_Alta"
+    ON public."tbPersonas" USING btree
+    (idpaisalta ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: fki_fkPersonas_Pais_Doc
+
+-- DROP INDEX IF EXISTS public."fki_fkPersonas_Pais_Doc";
+
+CREATE INDEX IF NOT EXISTS "fki_fkPersonas_Pais_Doc"
+    ON public."tbPersonas" USING btree
+    (idpaisdoc ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: fki_fkPersonas_Pais_Nac
+
+-- DROP INDEX IF EXISTS public."fki_fkPersonas_Pais_Nac";
+
+CREATE INDEX IF NOT EXISTS "fki_fkPersonas_Pais_Nac"
+    ON public."tbPersonas" USING btree
+    (idpaisnac ASC NULLS LAST)
+    TABLESPACE pg_default;
